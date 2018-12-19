@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "valid.h": "c",
+        "in.h": "c",
+        "string.h": "c"
+    }
+}
