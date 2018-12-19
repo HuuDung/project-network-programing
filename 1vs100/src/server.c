@@ -12,10 +12,13 @@
 #include "../libs/tool.h"
 #include "../libs/protocol.h"
 #include "../libs/valid.h"
+#include "../libs/question.h"
+
 
 #define BACKLOG 20 /* Number of allowed connections */
 #define BUFF_SIZE 1024
 Account **head;
+Question **headQuestion;
 void loadDataBase()
 {
     FILE *fin;

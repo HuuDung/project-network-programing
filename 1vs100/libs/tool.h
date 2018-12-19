@@ -7,4 +7,5 @@
 
 void splitMessage(char *input, char *code, char *data);
 void splitMessageData(char *input, char *data1, char *data2);
+void splitQuestionFromFile(char *input, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
 #endif

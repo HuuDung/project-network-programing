@@ -1,0 +1,3 @@
+EASY        cau hoi 1       cau tra loi 1
+HARD        cau hoi 2       cau tra loi 2
+NORMAL      cau hoi 3       cau tra loi so 3

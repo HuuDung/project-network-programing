@@ -2,10 +2,10 @@ CFLAGS = -c -Wall
 CC = gcc
 LIBS =  -lm 
 
-all: client server
+all: client server 
 
-server: server.o protocol.o tool.o valid.o account.o
-	${CC} protocol.o tool.o valid.o account.o server.o -o server
+server: server.o protocol.o tool.o valid.o account.o question.o
+	${CC} protocol.o tool.o valid.o account.o server.o question.o -o server
 
 server.o: server.c
 	${CC} ${CFLAGS} server.c
@@ -15,6 +15,9 @@ client: client.o protocol.o tool.o valid.o
 
 client.o: client.c 
 	${CC} ${CFLAGS} client.c
+
+question.o: question.c
+	${CC} ${CFLAGS} question.c
 
 protocol.o: protocol.c
 	${CC} ${CFLAGS} protocol.c

@@ -17,7 +17,7 @@ typedef struct
     int status;
     int accountStatus;
     int countSignIn;
-    struct account *next;
+    struct Account *next;
 } Account;
 
 Account **createLinkList();
