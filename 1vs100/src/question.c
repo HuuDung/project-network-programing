@@ -1,4 +1,11 @@
 #include "../libs/question.h"
+Question **createQuestionList()
+{
+    Question **head = (Question **)malloc(sizeof(Question *));
+    *head = NULL;
+
+    return head;
+}
 LIST_ANSWER convertListAnswer(char *input)
 {
     if (strcmp(input, "A") == 0)
@@ -20,6 +27,18 @@ LEVEL convertLevel(char *input)
     else if (strcmp(input, "Hard") == 0)
         return HARD;
 }
+Question *newQuestion(char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
+{
+    Question *new = (Question *)malloc(sizeof(Question));
+    new->level = convertLevel(level);
+    strcpy(new->question, question);
+    strcpy(new->answer1, answer1);
+    strcpy(new->answer2, answer2);
+    strcpy(new->answer3, answer3);
+    strcpy(new->answer4, answer4);
+    new->true_ans = convertListAnswer(answerTrue);
+    return new;
+}
 
 void addQuestion(Question **head, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
 {
@@ -35,19 +54,6 @@ void addQuestion(Question **head, char *level, char *question, char *answer1, ch
             current = current->next;
         current->next = new;
     }
-}
-
-Question *newQuestion(char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
-{
-    Question *new = (Question *)malloc(sizeof(Question));
-    new->level = convertLevel(level);
-    strcpy(new->question, question);
-    strcpy(new->answer1, answer1);
-    strcpy(new->answer2, answer2);
-    strcpy(new->answer3, answer3);
-    strcpy(new->answer4, answer4);
-    new->true_ans = convertListAnswer(answerTrue);
-    return new;
 }
 
 void readQuestionFromFile(Question **head)

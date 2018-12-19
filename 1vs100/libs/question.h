@@ -33,6 +33,7 @@ typedef struct
     struct Question *next;
 } Question;
 
+Question **createQuestionList();
 void readQuestionFromFile(Question **head);
 Question *newQuestion(char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
 void addQuestion(Question **head, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);

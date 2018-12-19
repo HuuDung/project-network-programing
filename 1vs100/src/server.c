@@ -14,7 +14,6 @@
 #include "../libs/valid.h"
 #include "../libs/question.h"
 
-
 #define BACKLOG 20 /* Number of allowed connections */
 #define BUFF_SIZE 1024
 Account **head;
@@ -64,6 +63,7 @@ int main(int argc, char const *argv[])
     Account *account[BACKLOG];
     Request_Login *rcvRequest = (Request_Login *)malloc(sizeof(Request_Login));
     Response *loginResponse = (Response *)malloc(sizeof(Response));
+    headQuestion= createQuestionList();
 
     if (argc != 2)
     {
@@ -71,6 +71,8 @@ int main(int argc, char const *argv[])
     }
     else
     {
+        readQuestionFromFile(headQuestion);
+        printListQuestion(headQuestion);
         if (checkPort(argv[1]) == 1)
         {
             loadDataBase();
