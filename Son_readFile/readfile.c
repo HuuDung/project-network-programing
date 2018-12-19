@@ -34,32 +34,44 @@ typedef struct
     struct Question *next;
 } Question;
 
-void printQuestion(Question *i){
-    printf("%s\t\t%s\t\t%s\n\n",i->level,i->question,(i->ans).content);
-    if(i->next != NULL){
-        printQuestion(i->next);
+void printQuestion(Question **head){
+    Question *p = NULL;
+    for (p = *head; p != NULL; p = p->next)
+    printf("%s%s%s\n\n",p->level,p->question,(p->ans).content);
+}
+void addQuestion(Question **head, Question *new)
+{
+    Question *current = (*head);
+
+    if (*head == NULL)
+    {
+        (*head) = new;
+    }
+    else
+    {
+        while (current->next != NULL)
+            current = current->next;
+        current->next = new;
     }
 }
 Question* fileReader(FILE *file){
     Question *i = malloc(sizeof(Question));
-    char *lv;
-    char *qs;
-    char *as;
-    int fileRead1 = fgets(lv,'\t\t',file);
-    int fileRead2 = fgets(qs,'\t\t',file);
-    int fileRead3 = fgets(as,'\0',file);
-    if((fileRead1 != EOF) && (fileRead2 != EOF) && (fileRead3 != EOF)){
-        strcpy(i->level,lv);
-        strcpy(i->question,qs);
-        strcpy((i->ans).content,as);
-        i->next = fileReader(file);
-    }
-    if((fileRead1 == EOF)|| (fileRead2 == EOF) || (fileRead3 == EOF)) {
-        return NULL;
+    int numberQ;
+    int tmp;
+    file = fopen("question.txt","r");
+    fscanf(file,"%d",&numberQ);
+    fgetc(file);
+    for(int j=0;j<numberQ;j++){
+        Question *new = malloc(sizeof(Question));
+        fgets(new->level,1000,file);
+        fgets(new->question,1000,file);
+        fgets((new->ans).content,1000,file);
+        addQuestion(i,new);  
     }
     return i;
 }
 int main(){
+
     FILE *x = fopen("question.txt","r");
     Question *q = fileReader(x);
     printQuestion(q);
