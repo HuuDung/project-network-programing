@@ -4,6 +4,7 @@ Account **createLinkList()
 {
     Account **head = (Account **)malloc(sizeof(Account *));
     *head = NULL;
+
     return head;
 }
 
@@ -20,7 +21,7 @@ Account *findUserNameAccount(Account **head, char *username)
 
 Account *newAccount(char *username, char *password, int accountStatus)
 {
-    Account *new = (Account*)malloc(sizeof(Account));
+    Account *new = (Account *)malloc(sizeof(Account));
     strcpy(new->username, username);
     strcpy(new->password, password);
     new->accountStatus = accountStatus;
