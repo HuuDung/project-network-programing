@@ -1,4 +1,4 @@
-Easy|Câu hỏi 1|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|A
-Normal|Câu hỏi 2|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|B
-Hard|Câu hỏi 3|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|C
-Easy|Câu hỏi 4|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|D
+1|Easy|Câu hỏi 1|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|A
+2|Normal|Câu hỏi 2|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|B
+3|Hard|Câu hỏi 3|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|C
+4|Easy|Câu hỏi 4|A.Đáp án 1|B.Đáp án 2|C.Đáp án 3|D.Đáp án 4|D

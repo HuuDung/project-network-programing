@@ -59,11 +59,12 @@ int main(int argc, char const *argv[])
     socklen_t clilen;
     struct sockaddr_in cliaddr, servaddr;
     char username[30], password[30];
-    int status[BACKLOG], sessionStatus;
+    int numberArray[BUFF_SIZE], status[BACKLOG];
+    int numberArrayLength;
     Account *account[BACKLOG];
     Request_Login *rcvRequest = (Request_Login *)malloc(sizeof(Request_Login));
     Response *loginResponse = (Response *)malloc(sizeof(Response));
-    headQuestion= createQuestionList();
+    headQuestion = createQuestionList();
 
     if (argc != 2)
     {
@@ -72,7 +73,8 @@ int main(int argc, char const *argv[])
     else
     {
         readQuestionFromFile(headQuestion);
-        printListQuestion(headQuestion);
+        // numberArrayLength = searchQuestionByLevel()
+        printf("%d\n", randomNumberInArray(numberArray, searchQuestionByLevel(headQuestion,convertLevel("Normal"), numberArray)));
         if (checkPort(argv[1]) == 1)
         {
             loadDataBase();

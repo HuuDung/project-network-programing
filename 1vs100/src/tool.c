@@ -32,8 +32,9 @@ void splitMessageData(char *input, char *username, char *password)
 	password[passwordLength] = '\0';
 }
 
-void splitQuestionFromFile(char *input, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
+void splitQuestionFromFile(char *input, char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
 {
+	int sttLength = 0;
 	int levelLength = 0;
 	int questionLength = 0;
 	int answer1Length = 0;
@@ -42,8 +43,17 @@ void splitQuestionFromFile(char *input, char *level, char *question, char *answe
 	int answer4Length = 0;
 	int answerTrueLength = 0;
 	int i;
-	//split level
+	//split stt
 	for (i = 0; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		stt[sttLength++] = input[i];
+	}
+	i++;
+	stt[sttLength] = '\0';
+	//split level
+	for (i; i < strlen(input); i++)
 	{
 		if (input[i] == '|')
 			break;
@@ -104,4 +114,11 @@ void splitQuestionFromFile(char *input, char *level, char *question, char *answe
 		answerTrue[answerTrueLength++] = input[i];
 	}
 	answerTrue[answerTrueLength] = '\0';
+}
+
+int randomNumberInArray(int *numberArray, int length)
+{
+	int result;
+	result = rand() % length;
+	return numberArray[result];
 }

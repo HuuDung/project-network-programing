@@ -23,6 +23,7 @@ typedef enum
 
 typedef struct
 {
+    int stt;
     char question[BUFF_SIZE];
     char answer1[BUFF_SIZE];
     char answer2[BUFF_SIZE];
@@ -35,8 +36,11 @@ typedef struct
 
 Question **createQuestionList();
 void readQuestionFromFile(Question **head);
-Question *newQuestion(char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
-void addQuestion(Question **head, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
+Question *newQuestion(char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
+void addQuestion(Question **head, char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
+int searchQuestionByLevel(Question **head, LEVEL level, int *numberArray);
+void deleteQuestion(Question **head, int stt);
+Question *searchQuestionByStt(Question **head, int stt);
 void printListQuestion(Question **head);
 
 LIST_ANSWER convertListAnswer(char *input);
