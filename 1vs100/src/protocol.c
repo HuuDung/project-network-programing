@@ -1,6 +1,6 @@
 #include "../libs/protocol.h"
 
-int receiveRequestLogin(int socket, Request_Login *buff, int size, int flags)
+int receiveRequest(int socket, Request *buff, int size, int flags)
 {
   int n;
 
@@ -10,7 +10,7 @@ int receiveRequestLogin(int socket, Request_Login *buff, int size, int flags)
   return n;
 }
 
-int sendRequest(int socket, Request_Login *buff, int size, int flags)
+int sendRequest(int socket, Request *buff, int size, int flags)
 {
   int n;
 
@@ -23,7 +23,6 @@ int sendRequest(int socket, Request_Login *buff, int size, int flags)
 int sendResponse(int socket, Response *msg, int size, int flags)
 {
   int n;
-
   n = send(socket, msg, size, flags);
   if (n < 0)
     perror("Error: ");
@@ -33,7 +32,6 @@ int sendResponse(int socket, Response *msg, int size, int flags)
 int receiveResponse(int socket, Response *msg, int size, int flags)
 {
   int n;
-
   n = recv(socket, msg, size, flags);
   if (n < 0)
     perror("Error: ");
@@ -88,6 +86,33 @@ void setMessageResponse(Response *msg)
     case PASSWORD_CORRECT_BUT_ACCOUNT_IS_SIGNINED_IN_ORTHER_CLIENT:
       strcpy(msg->message, "Account is signin in orhter client ");
       break;
+    case ANSWER_IS_CORRECT:
+      strcpy(msg->message, "The answer is correct ");
+      break;
+    case ANSWER_IS_INCORRECT:
+      strcpy(msg->message, "The answer is incorrect ");
+      break;
+    case USER_USED_HINT:
+      strcpy(msg->message, "User used hint ");
+      break;
+    case USER_CHOOSE_TOPIC_LEVEL:
+      strcpy(msg->message, "User choose level ");
+      break;
+    case LEAVE_ROOM:
+      strcpy(msg->message, "Leave room ");
+      break;
+    case GAME_READY:
+      strcpy(msg->message, "Game ready ");
+      break;
+    case GAME_NOT_READY:
+      strcpy(msg->message, "Waiting orther player... ");
+      break;
+    case GAME_HAVE_QUESTION:
+      strcpy(msg->message, "");
+      break;
+    case GAME_NO_QUESTION:
+      strcpy(msg->message, "");
+      break;
     default:
       strcpy(msg->message, "Exception ");
       break;
@@ -114,7 +139,7 @@ void readMessageResponse(Response *msg)
   }
 }
 
-void setOpcodeRequestLogin(Request_Login *request, char *input)
+void setOpcodeRequest(Request *request, char *input)
 {
   char code[BUFF_SIZE], data[BUFF_SIZE];
   splitMessage(input, code, data);
@@ -127,6 +152,40 @@ void setOpcodeRequestLogin(Request_Login *request, char *input)
     request->code = REGISTER;
   else if (strcmp(code, "LOGOUT") == 0)
     request->code = LOGOUT;
+  else if (strcmp(code, "CHECK") == 0)
+    request->code = CHECK;
+  else if (strcmp(code, "ANSWER") == 0)
+    request->code = CHOOSE_ANWSER;
+  else if (strcmp(code, "TOPIC") == 0)
+    request->code = TOPIC_LEVEL;
+  else if (strcmp(code, "HELP") == 0)
+    request->code = HELP;
+  else if (strcmp(code, "LEAVE") == 0)
+    request->code = LEAVE;
   else
     request->code = INPUT_SYNTAX_ERROR;
+}
+
+int sendQuestion(int socket, Question *question, int size, int flags)
+{
+  int n;
+  n = send(socket, question, size, flags);
+  if (n < 0)
+    perror("Error: ");
+  return n;
+}
+int receiveQuestion(int socket, Question *question, int size, int flags)
+{
+  int n;
+  n = recv(socket, question, size, flags);
+  if (n < 0)
+    perror("Error: ");
+  return n;
+}
+
+void requestGet(int socket)
+{
+  Request *request = (Request *)malloc(sizeof(Request));
+  setOpcodeRequest(request, "CHECK check");
+  sendRequest(socket, request, sizeof(Request), 0);
 }

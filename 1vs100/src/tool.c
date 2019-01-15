@@ -118,7 +118,6 @@ void splitQuestionFromFile(char *input, char *stt, char *level, char *question, 
 
 int randomNumberInArray(int *numberArray, int length)
 {
-	int result;
-	result = rand() % length;
-	return numberArray[result];
+	srand ( time(NULL) );
+	return numberArray[rand() % length];
 }

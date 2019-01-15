@@ -7,47 +7,34 @@
 
 #include "../libs/tool.h"
 #include "../libs/valid.h"
-
+#include "../libs/gameplay.h"
+#include "../libs/question.h"
 typedef enum
 {
     USER,
     PASS,
     REGISTER,
     LOGOUT,
-    INPUT_SYNTAX_ERROR,
-} Login_Opcode;
-
-typedef enum
-{
+    CHECK,
     CHOOSE_ANWSER,
-    TOPIC,
+    TOPIC_LEVEL,
     HELP,
-    GAMEPLAY_SYNTAX_ERROR,
-} Game_Client_Opcode;
-
-typedef enum
-{
-    LUCKY_USER,
-    QUESTION,
-    ANSWER,
-    USER_STILL,
-    USER_WRONG,
-    BONUS,
-    LOSE,
-    WIN,
-} Game_Server_Opcode;
+    LEAVE,
+    INPUT_SYNTAX_ERROR,
+} OPCODE;
 
 typedef enum
 {
     NOT_LOGGED_IN,
     UNAUTHENTICATE,
     AUTHENTICATED,
-} Phase;
+} PHASE;
 
 typedef enum
 {
     SYNTAX_ERROR = 02,
     INVALID_OPERATION = 03,
+    USER_IS_NOT_SIGNIN = 04,
 
     USER_NAME_FOUND = 11,
     USER_NAME_NOT_FOUND = 12,
@@ -65,23 +52,38 @@ typedef enum
     REGISTER_SUCCESSFULL = 41,
     REGISTER_USERNAME_EXISTED = 42,
 
-} Message;
+    ANSWER_IS_CORRECT = 51,
+    ANSWER_IS_INCORRECT = 52,
+
+    USER_USED_HINT = 61,
+
+    USER_CHOOSE_TOPIC_LEVEL = 71,
+
+    LEAVE_ROOM = 81,
+
+    GAME_READY = 91,
+    GAME_NOT_READY = 92,
+    GAME_HAVE_QUESTION = 93,
+    GAME_NO_QUESTION = 94,
+
+} MESSAGE_STATUS;
 
 typedef struct
 {
-    Login_Opcode code;
+    OPCODE code;
     char message[50];
-} Request_Login;
+} Request;
 
 typedef struct
 {
-    Message code;
+    GAMEPLAY_STATUS status;
+    MESSAGE_STATUS code;
     char message[50];
     char data[50];
 } Response;
 //core function
-int receiveRequestLogin(int socket, Request_Login *buff, int size, int flags);
-int sendRequestLogin(int socket, Request_Login *buff, int size, int flags);
+int receiveRequest(int socket, Request *buff, int size, int flags);
+int sendRequest(int socket, Request *buff, int size, int flags);
 
 int sendMessage(int socket, Response *msg, int size, int flags);
 int receiveMessage(int socket, Response *msg, int size, int flags);
@@ -90,7 +92,14 @@ int receiveMessage(int socket, Response *msg, int size, int flags);
 void setMessageResponse(Response *msg);
 void readMessageResponse(Response *msg);
 
-//set opcode resquest
-void setLoginOpcodeRequest(Request_Login *request, char *input);
+//set opcode request
+void setOpcodeRequest(Request *request, char *input);
 
+//send question
+int sendQuestion(int socket, Question *question, int size, int flags);
+int receiveQuestion(int socket, Question *question, int size, int flags);
+
+//request get
+void requestGet(int socket);
+void requestCheck(int socket);
 #endif

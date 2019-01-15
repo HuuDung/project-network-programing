@@ -38,10 +38,13 @@ Question **createQuestionList();
 void readQuestionFromFile(Question **head);
 Question *newQuestion(char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
 void addQuestion(Question **head, char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
-int searchQuestionByLevel(Question **head, LEVEL level, int *numberArray);
-void deleteQuestion(Question **head, int stt);
-Question *searchQuestionByStt(Question **head, int stt);
 void printListQuestion(Question **head);
+void deleteQuestion(Question **head, int stt);
+//search
+Question *searchQuestionByStt(Question **head, int stt);
+int searchQuestionByLevel(Question **head, LEVEL level, int *numberArray);
+//check answer
+int checkAnswer(LIST_ANSWER node, LIST_ANSWER ans);
 
 LIST_ANSWER convertListAnswer(char *input);
 LEVEL convertLevel(char *input);

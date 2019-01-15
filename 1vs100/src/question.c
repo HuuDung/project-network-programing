@@ -144,3 +144,11 @@ void deleteQuestion(Question **head, int stt)
         }
     free(current);
 }
+
+int checkAnswer(LIST_ANSWER node, LIST_ANSWER ans)
+{
+    if (node == ans)
+        return 1;
+    else
+        return 0;
+}

@@ -14,6 +14,7 @@ typedef struct
 {
     char username[30];
     char password[30];
+    int position;
     int status;
     int accountStatus;
     int countSignIn;
@@ -22,8 +23,10 @@ typedef struct
 
 Account **createLinkList();
 Account *findUserNameAccount(Account **head, char *username);
-Account *newAccount(char *username, char *password, int accountStatus);
-void addAccount(Account **head, char *username, char *password, int accountStatus);
+Account *findUserNameAccountByPosition(Account **head, int position);
+Account *newAccount(char *username, char *password, int accountStatus, int position);
+void addAccount(Account **head, char *username, char *password, int accountStatus, int position);
+int countMemberOnline(Account **head, int *numberPLayerArray);
 void printListAccount(Account **head);
 
 void blockAccount(Account **head, char *username);
