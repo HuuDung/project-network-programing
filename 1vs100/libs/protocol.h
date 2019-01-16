@@ -19,7 +19,7 @@ typedef enum
     CHOOSE_ANWSER,
     TOPIC_LEVEL,
     HELP,
-    LEAVE,
+    INFORMATION,
     INPUT_SYNTAX_ERROR,
 } OPCODE;
 
@@ -47,7 +47,6 @@ typedef enum
     PASSWORD_CORRECT_BUT_ACCOUNT_IS_SIGNINED_IN_ORTHER_CLIENT = 24,
 
     LOGOUT_SUCCESS = 31,
-    LOGOUT_NOT_SIGNIN = 32,
 
     REGISTER_SUCCESSFULL = 41,
     REGISTER_USERNAME_EXISTED = 42,
@@ -55,16 +54,19 @@ typedef enum
     ANSWER_IS_CORRECT = 51,
     ANSWER_IS_INCORRECT = 52,
 
-    USER_USED_HINT = 61,
+    USER_USED_HINT_SUCCESS = 61,
+    USER_USED_HINT_FAIL = 62,
 
     USER_CHOOSE_TOPIC_LEVEL = 71,
 
-    LEAVE_ROOM = 81,
+    INFORMATION_SUCCESS = 81,
+    INFORMATION_ORTHER_PLAYER_ANSWERING = 82,
 
     GAME_READY = 91,
     GAME_NOT_READY = 92,
     GAME_HAVE_QUESTION = 93,
     GAME_NO_QUESTION = 94,
+    GAME_END_WIN = 95,
 
 } MESSAGE_STATUS;
 
@@ -98,8 +100,11 @@ void setOpcodeRequest(Request *request, char *input);
 //send question
 int sendQuestion(int socket, Question *question, int size, int flags);
 int receiveQuestion(int socket, Question *question, int size, int flags);
-
+//send information
+int sendInformation(int socket, Information *infor, int size, int flags);
+int receiveInformation(int socket, Information *infor, int size, int flags);
 //request get
 void requestGet(int socket);
-void requestCheck(int socket);
+void requestLogout(int socket, char *username);
+void requestCheckInformation(int socket);
 #endif
