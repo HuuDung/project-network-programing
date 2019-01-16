@@ -147,9 +147,12 @@ int main(int argc, char const *argv[])
                         setOpcodeRequest(request, buff);
                         sendRequest(client_sock, request, sizeof(Request), 0);
                         receiveResponse(client_sock, response, sizeof(Response), 0);
-                        strcpy(topic, response->data);
-                        readMessageResponse(response);
                         status = response->status;
+                        if (status == PLAYING)
+                        {
+                            strcpy(topic, response->data);
+                            readMessageResponse(response);
+                        }
                     }
                     else
                     {
@@ -164,10 +167,8 @@ int main(int argc, char const *argv[])
                     }
                     break;
                 case PLAYING:
-
-                    switch (lucky)
+                    if (lucky == TRUE)
                     {
-                    case TRUE:
                         if (existQuestion == TRUE)
                         {
                             printf("Chủ đề: %s", topic);
@@ -179,13 +180,23 @@ int main(int argc, char const *argv[])
                             buff[strlen(buff) - 1] = '\0';
                             setOpcodeRequest(request, buff);
                             sendRequest(client_sock, request, sizeof(Request), 0);
+                            receiveResponse(client_sock, response, sizeof(Response), 0);
+                            status = response->status;
+                            if (status != PLAYING)
+                            {
+                                readMessageResponse(response);
+                                existQuestion = FALSE;
+                            }
                         }
                         else
                         {
                             requestGet(client_sock);
+                            receiveQuestion(client_sock, ques, sizeof(Question), 0);
+                            existQuestion = TRUE;
                         }
-
-                    case FALSE:
+                    }
+                    else
+                    {
                         if (existQuestion == TRUE)
                         {
                             printf("Chủ đề: %s", topic);
@@ -197,6 +208,13 @@ int main(int argc, char const *argv[])
                             buff[strlen(buff) - 1] = '\0';
                             setOpcodeRequest(request, buff);
                             sendRequest(client_sock, request, sizeof(Request), 0);
+                            receiveResponse(client_sock, response, sizeof(Response), 0);
+                            status = response->status;
+                            if (status != PLAYING)
+                            {
+                                readMessageResponse(response);
+                                existQuestion = FALSE;
+                            }
                         }
                         else
                         {
