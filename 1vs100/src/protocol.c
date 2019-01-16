@@ -74,9 +74,6 @@ void setMessageResponse(Response *msg)
     case LOGOUT_SUCCESS:
       strcpy(msg->message, "Logout successful ");
       break;
-    case LOGOUT_NOT_SIGNIN:
-      strcpy(msg->message, "Account is not sign in ");
-      break;
     case REGISTER_SUCCESSFULL:
       strcpy(msg->message, "Register successfull ");
       break;
@@ -90,16 +87,22 @@ void setMessageResponse(Response *msg)
       strcpy(msg->message, "The answer is correct ");
       break;
     case ANSWER_IS_INCORRECT:
-      strcpy(msg->message, "The answer is incorrect ");
+      strcpy(msg->message, "The answer is incorrect \nEnd game");
       break;
-    case USER_USED_HINT:
-      strcpy(msg->message, "User used hint ");
+    case USER_USED_HINT_SUCCESS:
+      strcpy(msg->message, "User used hint success! ");
+      break;
+    case USER_USED_HINT_FAIL:
+      strcpy(msg->message, "User used hint fail! You have used up the suggestions ");
       break;
     case USER_CHOOSE_TOPIC_LEVEL:
       strcpy(msg->message, "User choose level ");
       break;
-    case LEAVE_ROOM:
-      strcpy(msg->message, "Leave room ");
+    case INFORMATION_SUCCESS:
+      strcpy(msg->message, "");
+      break;
+    case INFORMATION_ORTHER_PLAYER_ANSWERING:
+      strcpy(msg->message, "");
       break;
     case GAME_READY:
       strcpy(msg->message, "Game ready ");
@@ -131,7 +134,7 @@ void readMessageResponse(Response *msg)
       printf("Hello %s\n", msg->data);
       break;
     case LOGOUT_SUCCESS:
-      printf("\nGoodbye %s\n", msg->data);
+      printf("Goodbye %s\n", msg->data);
       break;
     default:
       break;
@@ -154,14 +157,14 @@ void setOpcodeRequest(Request *request, char *input)
     request->code = LOGOUT;
   else if (strcmp(code, "CHECK") == 0)
     request->code = CHECK;
+  else if (strcmp(code, "INFORMATION") == 0)
+    request->code = INFORMATION;
   else if (strcmp(code, "ANSWER") == 0)
     request->code = CHOOSE_ANWSER;
   else if (strcmp(code, "TOPIC") == 0)
     request->code = TOPIC_LEVEL;
   else if (strcmp(code, "HELP") == 0)
     request->code = HELP;
-  else if (strcmp(code, "LEAVE") == 0)
-    request->code = LEAVE;
   else
     request->code = INPUT_SYNTAX_ERROR;
 }
@@ -187,5 +190,36 @@ void requestGet(int socket)
 {
   Request *request = (Request *)malloc(sizeof(Request));
   setOpcodeRequest(request, "CHECK check");
+  sendRequest(socket, request, sizeof(Request), 0);
+}
+void requestCheckInformation(int socket)
+{
+  Request *request = (Request *)malloc(sizeof(Request));
+  setOpcodeRequest(request, "INFORMATION information");
+  sendRequest(socket, request, sizeof(Request), 0);
+}
+int sendInformation(int socket, Information *infor, int size, int flags)
+{
+  int n;
+  n = send(socket, infor, size, flags);
+  if (n < 0)
+    perror("Error: ");
+  return n;
+}
+int receiveInformation(int socket, Information *infor, int size, int flags)
+{
+  int n;
+  n = recv(socket, infor, size, flags);
+  if (n < 0)
+    perror("Error: ");
+  return n;
+}
+void requestLogout(int socket, char *username)
+{
+  Request *request = (Request *)malloc(sizeof(Request));
+  char buff[BUFF_SIZE];
+  strcpy(buff, "LOGOUT ");
+  strcat(buff, username);
+  setOpcodeRequest(request, buff);
   sendRequest(socket, request, sizeof(Request), 0);
 }

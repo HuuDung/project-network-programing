@@ -7,6 +7,9 @@
 
 #define BUFF_SIZE 2014
 
+#define TRUE 1
+#define FALSE 0
+
 int checkValue(int value); 
 int checkDigit(char character);
 int checkDotInString(char *string);

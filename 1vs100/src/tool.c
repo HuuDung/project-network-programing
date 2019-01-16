@@ -115,9 +115,41 @@ void splitQuestionFromFile(char *input, char *stt, char *level, char *question, 
 	}
 	answerTrue[answerTrueLength] = '\0';
 }
-
+void splitHelpFromFile(char *input, char *stt, char *key, char *value)
+{
+	int sttLength = 0;
+	int keyLength = 0;
+	int valueLength = 0;
+	int i;
+	//split stt
+	for (i = 0; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		stt[sttLength++] = input[i];
+	}
+	i++;
+	stt[sttLength] = '\0';
+	//split key
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		key[keyLength++] = input[i];
+	}
+	i++;
+	key[keyLength] = '\0';
+	//split value
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '\n')
+			break;
+		value[valueLength++] = input[i];
+	}
+	value[valueLength] = '\0';
+}
 int randomNumberInArray(int *numberArray, int length)
 {
-	srand ( time(NULL) );
+	srand(time(NULL));
 	return numberArray[rand() % length];
 }

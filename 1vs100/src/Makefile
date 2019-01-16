@@ -4,14 +4,14 @@ LIBS =  -lm
 
 all: client server 
 
-server: server.o protocol.o tool.o valid.o account.o question.o
-	${CC} protocol.o tool.o valid.o account.o server.o question.o -o server
+server: server.o protocol.o tool.o valid.o account.o question.o gameplay.o
+	${CC} protocol.o tool.o valid.o account.o server.o question.o gameplay.o -o server
 
 server.o: server.c
 	${CC} ${CFLAGS} server.c
 
-client: client.o protocol.o tool.o valid.o
-	${CC} protocol.o tool.o valid.o client.o -o client
+client: client.o protocol.o tool.o valid.o gameplay.o
+	${CC} protocol.o tool.o valid.o client.o gameplay.o -o client
 
 client.o: client.c 
 	${CC} ${CFLAGS} client.c
@@ -24,6 +24,9 @@ protocol.o: protocol.c
 
 tool.o: tool.c
 	${CC} ${CFLAGS} tool.c
+
+gameplay.o: gameplay.c
+	${CC} ${CFLAGS} gameplay.c
 
 account.o: account.c
 	${CC} ${CFLAGS} account.c
