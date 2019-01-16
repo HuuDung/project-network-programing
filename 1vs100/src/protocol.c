@@ -116,6 +116,9 @@ void setMessageResponse(Response *msg)
     case GAME_NO_QUESTION:
       strcpy(msg->message, "");
       break;
+    case GAME_END_WIN:
+      strcpy(msg->message, "End game.\nYou are champion ");
+      break;
     default:
       strcpy(msg->message, "Exception ");
       break;

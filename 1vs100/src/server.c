@@ -70,6 +70,7 @@ int main(int argc, char const *argv[])
     int positionLuckyPlayer = 0;
     PHASE status[BACKLOG];
     GAMEPLAY_STATUS gamePlayStatus[BACKLOG];
+    int result[BACKLOG];
 
     int numberArrayLength, number = 0;
     int countPlayerPlaying = 0, countAnswerWrong = 0, countPlayerLoser = 0;
@@ -77,7 +78,7 @@ int main(int argc, char const *argv[])
     int help = FALSE;
     int helpNumber = 1;
     int questionNumber = 0;
-    int gameStatus = GAME_PLAYING;
+    int gameStatus = GAME_END;
     float score = 0, playerScore = 0, bonusScore = 0;
 
     Account *account[BACKLOG];
@@ -188,6 +189,11 @@ int main(int argc, char const *argv[])
                     luckyPlayer = findUserNameAccountByPosition(head, positionLuckyPlayer);
                     readQuestionFromFile(headQuestion);
                     readHelpFromFile(headHelp);
+                    playerScore = 0;
+                    score = 0;
+                    countPlayerPlaying = 0;
+                    countAnswerWrong = 0;
+                    countPlayerLoser = 0;
                 }
                 for (i = 0; i <= maxi; i++)
                 { /* check all clients for data */
@@ -204,11 +210,9 @@ int main(int argc, char const *argv[])
                         }
                         else
                         {
-
                             switch (gamePlayStatus[i])
                             {
                             case UNAUTH:
-
                                 if (rcvRequest->code == USER) // code = "USER"
                                 {
                                     switch (status[i])
@@ -419,27 +423,60 @@ int main(int argc, char const *argv[])
                                             sendInformation(sockfd, infor, sizeof(Information), 0);
                                         }
                                     }
+                                    else if (rcvRequest->code == CHECK)
+                                    {
+                                        if (BACKLOG - 1 - countPlayerLoser == 0)
+                                        {
+                                            gamePlayStatus[i] = END_GAME;
+                                            response->code = GAME_END_WIN;
+                                            gameStatus = END_GAME;
+                                            result[i] = WIN;
+                                        }
+                                        else
+                                        {
+                                            gamePlayStatus[i] = WAITING_QUESTION;
+                                        }
+                                        response->status = gamePlayStatus[i];
+                                        setMessageResponse(response);
+                                        sendResponse(sockfd, response, sizeof(Response), 0);
+                                    }
                                 }
                                 else
                                 {
                                     if (rcvRequest->code == CHECK)
                                     {
-                                        if (existQuestion == TRUE)
+                                        if (luckyPlayer->status == ONLINE)
                                         {
-                                            response->code = GAME_HAVE_QUESTION;
-                                            gamePlayStatus[i] = PLAYING;
-                                            response->status = gamePlayStatus[i];
-                                            memset(response->data, '\0', (strlen(response->data) + 1));
-                                            strcpy(response->data, topic);
-                                            setMessageResponse(response);
+                                            response->status = WAITING_QUESTION;
                                             sendResponse(sockfd, response, sizeof(Response), 0);
+                                            receiveRequest(sockfd, rcvRequest, sizeof(Request), 0);
+                                            if (existQuestion == TRUE)
+                                            {
+                                                response->code = GAME_HAVE_QUESTION;
+                                                gamePlayStatus[i] = PLAYING;
+                                                response->status = gamePlayStatus[i];
+                                                memset(response->data, '\0', (strlen(response->data) + 1));
+                                                strcpy(response->data, topic);
+                                                setMessageResponse(response);
+                                                sendResponse(sockfd, response, sizeof(Response), 0);
+                                            }
+                                            else
+                                            {
+                                                response->code = GAME_NO_QUESTION;
+                                                response->status = gamePlayStatus[i];
+                                                setMessageResponse(response);
+                                                sendResponse(sockfd, response, sizeof(Response), 0);
+                                                gameStatus = GAME_END;
+                                            }
                                         }
                                         else
                                         {
-                                            response->code = GAME_NO_QUESTION;
-                                            response->status = gamePlayStatus[i];
+                                            response->code = GAME_END_WIN;
+                                            response->status = END_GAME;
+                                            gamePlayStatus[i] = END_GAME;
                                             setMessageResponse(response);
                                             sendResponse(sockfd, response, sizeof(Response), 0);
+                                            result[i] = WIN;
                                         }
                                     }
                                 }
@@ -466,9 +503,9 @@ int main(int argc, char const *argv[])
                                             gamePlayStatus[i] = END_GAME;
                                             response->status = gamePlayStatus[i];
                                             sendResponse(sockfd, response, sizeof(Response), 0);
-                                            // bonusScore = playerScore / (countMemberOnline(head) - 1);
+                                            // bonusScore = playerScore / (countMemberOnline(head, numberPlayerArray) - 1);
                                             gameStatus = GAME_END;
-                                            positionLuckyPlayer = 0;
+                                            result[i] = LOSE;
                                         }
                                     }
                                     else if (rcvRequest->code == HELP)
@@ -524,6 +561,7 @@ int main(int argc, char const *argv[])
                                             response->status = gamePlayStatus[i];
                                             sendResponse(sockfd, response, sizeof(Response), 0);
                                             countAnswerWrong++;
+                                            result[i] = LOSE;
                                         }
                                         existQuestion = FALSE;
                                     }
@@ -540,6 +578,32 @@ int main(int argc, char const *argv[])
                             case END_GAME:
                                 if (strcmp(account[i]->username, luckyPlayer->username) == 0)
                                 {
+                                    if (rcvRequest->code == LOGOUT)
+                                    {
+                                        status[i] = NOT_LOGGED_IN;
+                                        gamePlayStatus[i] = UNAUTH;
+                                        response->status = gamePlayStatus[i];
+                                        account[i]->status = OFFLINE;
+
+                                        response->code = LOGOUT_SUCCESS;
+                                        setMessageResponse(response);
+                                        memset(response->data, '\0', (strlen(response->data) + 1));
+                                        strcpy(response->data, account[i]->username);
+                                        sendResponse(sockfd, response, sizeof(Response), 0);
+                                        positionLuckyPlayer = 0;
+                                    }
+                                    else if (rcvRequest->code == INFORMATION)
+                                    {
+                                        if (result[i] == WIN)
+                                        {
+                                            infor->score = playerScore;
+                                        }
+                                        else
+                                        {
+                                            infor->score = 0;
+                                        }
+                                        sendInformation(sockfd, infor, sizeof(Information), 0);
+                                    }
                                 }
                                 else
                                 {
@@ -557,7 +621,14 @@ int main(int argc, char const *argv[])
                                     }
                                     else if (rcvRequest->code == INFORMATION)
                                     {
-                                        infor->score = bonusScore;
+                                        if (result[i] == WIN)
+                                        {
+                                            infor->score = bonusScore;
+                                        }
+                                        else
+                                        {
+                                            infor->score = 0;
+                                        }
                                         sendInformation(sockfd, infor, sizeof(Information), 0);
                                     }
                                 }
@@ -566,14 +637,14 @@ int main(int argc, char const *argv[])
                                 break;
                             }
                         }
-                    }
 
-                    if (--nready <= 0)
-                        break; /* no more readable descriptors */
+                        if (--nready <= 0)
+                            break; /* no more readable descriptors */
+                    }
                 }
             }
-        }
 
-        return 0;
+            return 0;
+        }
     }
 }

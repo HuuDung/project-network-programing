@@ -153,7 +153,7 @@ int main(int argc, char const *argv[])
                                     printf("Số người trả lời sai câu hỏi trên: %d\n", infor->playerAnswerWrong);
                                     printf("Số điểm bạn nhận được: %.1f\n", infor->score);
                                     printf("Số người cùng chơi: %d\n", infor->playerPlaying);
-                                    printf("Số điểm của bạn hiện tại: %.1f", score);
+                                    printf("Số điểm của bạn hiện tại: %.1f\n", score);
                                 }
                                 else
                                 {
@@ -161,26 +161,37 @@ int main(int argc, char const *argv[])
                                     printf("Số điểm bạn nhận bị trừ: %.1f\n", infor->score);
                                     printf("Số người trả lời sai câu hỏi trên: %d\n", infor->playerAnswerWrong);
                                     printf("Số người cùng chơi: %d\n", infor->playerPlaying);
-                                    printf("Số điểm của bạn hiện tại: %.1f", score);
+                                    printf("Số điểm của bạn hiện tại: %.1f\n", score);
                                     help = FALSE;
                                 }
                             }
                         }
                         else
                         {
-                            chooseTopicLevel();
-                            memset(buff, '\0', (strlen(buff) + 1));
-                            fgets(buff, BUFF_SIZE, stdin);
-                            buff[strlen(buff) - 1] = '\0';
-                            setOpcodeRequest(request, buff);
-                            sendRequest(client_sock, request, sizeof(Request), 0);
+                            requestGet(client_sock);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
-                            status = response->status;
-                            if (status == PLAYING)
+                            if (response->status == END_GAME)
                             {
-                                strcpy(topic, response->data);
+                                status = response->status;
                                 readMessageResponse(response);
                             }
+                            else
+                            {
+                                chooseTopicLevel();
+                                memset(buff, '\0', (strlen(buff) + 1));
+                                fgets(buff, BUFF_SIZE, stdin);
+                                buff[strlen(buff) - 1] = '\0';
+                                setOpcodeRequest(request, buff);
+                                sendRequest(client_sock, request, sizeof(Request), 0);
+                                receiveResponse(client_sock, response, sizeof(Response), 0);
+                                status = response->status;
+                                if (status == PLAYING)
+                                {
+                                    strcpy(topic, response->data);
+                                    readMessageResponse(response);
+                                }
+                            }
+
                             inforamation = FALSE;
                         }
                     }
@@ -188,11 +199,21 @@ int main(int argc, char const *argv[])
                     {
                         requestGet(client_sock);
                         receiveResponse(client_sock, response, sizeof(Response), 0);
-                        status = response->status;
-                        if (status == PLAYING)
+                        if (response->status == END_GAME)
                         {
-                            strcpy(topic, response->data);
+                            status = response->status;
                             readMessageResponse(response);
+                        }
+                        else
+                        {
+                            requestGet(client_sock);
+                            receiveResponse(client_sock, response, sizeof(Response), 0);
+                            status = response->status;
+                            if (status == PLAYING)
+                            {
+                                strcpy(topic, response->data);
+                                readMessageResponse(response);
+                            }
                         }
                     }
                     break;
@@ -265,6 +286,22 @@ int main(int argc, char const *argv[])
                 case END_GAME:
                     if (lucky == TRUE)
                     {
+                        if (inforamation == FALSE)
+                        {
+                            inforamation = TRUE;
+                            requestCheckInformation(client_sock);
+                            receiveInformation(client_sock, infor, sizeof(Information), 0);
+                            printf("Số điểm bạn nhận được là: %1.f\n", infor->score);
+                        }
+                        else
+                        {
+                            requestLogout(client_sock, username);
+                            receiveResponse(client_sock, response, sizeof(Response), 0);
+                            status = response->status;
+                            readMessageResponse(response);
+                            questionNumber = 0;
+                            inforamation = FALSE;
+                        }
                     }
                     else
                     {
