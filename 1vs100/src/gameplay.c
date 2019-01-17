@@ -1,5 +1,5 @@
 #include "../libs/gameplay.h"
-
+//get lucky member
 int luckyMember(Account **head)
 {
     int memberArray[BUFF_SIZE];
@@ -12,6 +12,7 @@ int luckyMember(Account **head)
     }
     return randomNumberInArray(memberArray, length);
 }
+// calculator score
 float calculateScore(int countPlayerPlaying, int countPlayerLoser)
 {
     return 1000 / countPlayerPlaying * countPlayerLoser;
@@ -22,6 +23,7 @@ Help **createHelpList()
     *head = NULL;
     return head;
 }
+// read file help.txt, get data to Help **help
 void readHelpFromFile(Help **head)
 {
     FILE *fin;
@@ -40,6 +42,7 @@ void readHelpFromFile(Help **head)
     }
     fclose(fin);
 }
+//create node 
 Help *newHelp(char *stt, char *key, char *value)
 {
     Help *new = (Help *)malloc(sizeof(Help));
@@ -48,6 +51,7 @@ Help *newHelp(char *stt, char *key, char *value)
     new->value = atof(value);
     return new;
 }
+//add node with input:Help **head, char *stt, char *key, char *value
 void addHelp(Help **head, char *stt, char *key, char *value)
 {
     Help *new = newHelp(stt, key, value);
@@ -63,6 +67,10 @@ void addHelp(Help **head, char *stt, char *key, char *value)
         current->next = new;
     }
 }
+/*
+input: Help **head, int stt
+output: delete node 
+*/
 void deleteHelp(Help **head, int stt)
 {
     Help *tmp;
@@ -84,6 +92,10 @@ void deleteHelp(Help **head, int stt)
         }
     free(current);
 }
+/*
+input: Help **head, int stt
+output: Help *node
+*/
 Help *searchHelpByStt(Help **head, int stt)
 {
     Help *ptr;
