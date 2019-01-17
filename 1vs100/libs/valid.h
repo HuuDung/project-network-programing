@@ -10,11 +10,11 @@
 #define TRUE 1
 #define FALSE 0
 
-int checkValue(int value); 
-int checkDigit(char character);
-int checkDotInString(char *string);
-int checkIP(char *string);
-int checkPort(char *port);
-int checkSpace(char *input);
-int checkIPAndPort(char *ipaddr, char *port);
+int checkValue(int value);                    //check value
+int checkDigit(char character);               //check digit
+int checkDotInString(char *string);           //check dot
+int checkIP(char *string);                    //check IP
+int checkPort(char *port);                    //check port
+int checkSpace(char *input);                  //check Space
+int checkIPAndPort(char *ipaddr, char *port); //check IP and dot
 #endif

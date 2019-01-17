@@ -89,14 +89,20 @@ void setMessageResponse(Response *msg)
     case ANSWER_IS_INCORRECT:
       strcpy(msg->message, "The answer is incorrect \nEnd game");
       break;
+    case ANSWER_IS_INVALID:
+      strcpy(msg->message, "The answer is invalid ");
+      break;
     case USER_USED_HINT_SUCCESS:
       strcpy(msg->message, "User used hint success! ");
       break;
     case USER_USED_HINT_FAIL:
       strcpy(msg->message, "User used hint fail! You have used up the suggestions ");
       break;
-    case USER_CHOOSE_TOPIC_LEVEL:
+    case TOPIC_USER_CHOOSE_LEVEL:
       strcpy(msg->message, "User choose level ");
+      break;
+    case TOPIC_TYPE_INVALID:
+      strcpy(msg->message, "User choose level is invalid ");
       break;
     case INFORMATION_SUCCESS:
       strcpy(msg->message, "");
@@ -110,14 +116,14 @@ void setMessageResponse(Response *msg)
     case GAME_NOT_READY:
       strcpy(msg->message, "Waiting orther player... ");
       break;
-    case GAME_HAVE_QUESTION:
-      strcpy(msg->message, "");
-      break;
-    case GAME_NO_QUESTION:
+    case TOPIC_USER_DONT_CHOOSE_LEVEL:
       strcpy(msg->message, "");
       break;
     case GAME_END_WIN:
       strcpy(msg->message, "End game.\nYou are champion ");
+      break;
+      case GAME_IS_PLAYING_DONT_LOG_IN:
+      strcpy(msg->message, "\nGame is playing!! You can't login \n");
       break;
     default:
       strcpy(msg->message, "Exception ");
@@ -168,8 +174,6 @@ void setOpcodeRequest(Request *request, char *input)
     request->code = TOPIC_LEVEL;
   else if (strcmp(code, "HELP") == 0)
     request->code = HELP;
-  else
-    request->code = INPUT_SYNTAX_ERROR;
 }
 
 int sendQuestion(int socket, Question *question, int size, int flags)
@@ -224,5 +228,11 @@ void requestLogout(int socket, char *username)
   strcpy(buff, "LOGOUT ");
   strcat(buff, username);
   setOpcodeRequest(request, buff);
+  sendRequest(socket, request, sizeof(Request), 0);
+}
+void requestGetHelp(int socket)
+{
+  Request *request = (Request *)malloc(sizeof(Request));
+  setOpcodeRequest(request, "HELP help");
   sendRequest(socket, request, sizeof(Request), 0);
 }

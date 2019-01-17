@@ -148,6 +148,59 @@ void splitHelpFromFile(char *input, char *stt, char *key, char *value)
 	}
 	value[valueLength] = '\0';
 }
+void splitAccountFromFile(char *input, char *position, char *username, char *password, char *account, char *score)
+{
+	int positionLentgh = 0;
+	int usernameLength = 0;
+	int passwordLength = 0;
+	int accountLength = 0;
+	int scoreLength = 0;
+	int i;
+	//split position
+	for (i = 0; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		position[positionLentgh++] = input[i];
+	}
+	i++;
+	position[positionLentgh] = '\0';
+	//split username
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		username[usernameLength++] = input[i];
+	}
+	i++;
+	username[usernameLength] = '\0';
+	//split password
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		password[passwordLength++] = input[i];
+	}
+	i++;
+	password[passwordLength] = '\0';
+	//split account
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '|')
+			break;
+		account[accountLength++] = input[i];
+	}
+	i++;
+	account[accountLength] = '\0';
+	//split score
+	for (i; i < strlen(input); i++)
+	{
+		if (input[i] == '\n')
+			break;
+		score[scoreLength++] = input[i];
+	}
+	score[scoreLength] = '\0';
+}
 int randomNumberInArray(int *numberArray, int length)
 {
 	srand(time(NULL));

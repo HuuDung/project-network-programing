@@ -20,7 +20,6 @@ typedef enum
     TOPIC_LEVEL,
     HELP,
     INFORMATION,
-    INPUT_SYNTAX_ERROR,
 } OPCODE;
 
 typedef enum
@@ -35,6 +34,7 @@ typedef enum
     SYNTAX_ERROR = 02,
     INVALID_OPERATION = 03,
     USER_IS_NOT_SIGNIN = 04,
+    GAME_IS_PLAYING_DONT_LOG_IN = 05,
 
     USER_NAME_FOUND = 11,
     USER_NAME_NOT_FOUND = 12,
@@ -53,20 +53,21 @@ typedef enum
 
     ANSWER_IS_CORRECT = 51,
     ANSWER_IS_INCORRECT = 52,
+    ANSWER_IS_INVALID = 53,
 
     USER_USED_HINT_SUCCESS = 61,
     USER_USED_HINT_FAIL = 62,
 
-    USER_CHOOSE_TOPIC_LEVEL = 71,
+    TOPIC_USER_CHOOSE_LEVEL = 71,
+    TOPIC_TYPE_INVALID = 72,
+    TOPIC_USER_DONT_CHOOSE_LEVEL = 73,
 
     INFORMATION_SUCCESS = 81,
     INFORMATION_ORTHER_PLAYER_ANSWERING = 82,
 
     GAME_READY = 91,
     GAME_NOT_READY = 92,
-    GAME_HAVE_QUESTION = 93,
-    GAME_NO_QUESTION = 94,
-    GAME_END_WIN = 95,
+    GAME_END_WIN = 93,
 
 } MESSAGE_STATUS;
 
@@ -107,4 +108,5 @@ int receiveInformation(int socket, Information *infor, int size, int flags);
 void requestGet(int socket);
 void requestLogout(int socket, char *username);
 void requestCheckInformation(int socket);
+void requestGetHelp(int socket);
 #endif

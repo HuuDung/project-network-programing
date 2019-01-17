@@ -21,14 +21,14 @@ typedef struct
     struct Account *next;
 } Account;
 
-Account **createLinkList();
-Account *findUserNameAccount(Account **head, char *username);
-Account *findUserNameAccountByPosition(Account **head, int position);
-Account *newAccount(char *username, char *password, int accountStatus, int position);
-void addAccount(Account **head, char *username, char *password, int accountStatus, int position);
-int countMemberOnline(Account **head, int *numberPLayerArray);
-void printListAccount(Account **head);
+Account **createLinkList();                                                                       //Init link list NULL
+Account *findUserNameAccount(Account **head, char *username);                                     // find Account By Username
+Account *findUserNameAccountByPosition(Account **head, int position);                             // find account by position
+Account *newAccount(char *username, char *password, int accountStatus, int position);             // create node
+void addAccount(Account **head, char *username, char *password, int accountStatus, int position); //add node to link list
+int countMemberOnline(Account **head, int *numberPLayerArray);                                    //count member online and save position into array
+void printListAccount(Account **head);                                                            // print link list
 
-void blockAccount(Account **head, char *username);
-void signinAccount(Account **head, char *username);
+void blockAccount(Account **head, char *username);  //change status of account to block
+void signinAccount(Account **head, char *username); //change status to login
 #endif
