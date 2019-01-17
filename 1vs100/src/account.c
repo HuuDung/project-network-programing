@@ -1,5 +1,4 @@
 #include "../libs/account.h"
-
 Account **createLinkList()
 {
     Account **head = (Account **)malloc(sizeof(Account *));

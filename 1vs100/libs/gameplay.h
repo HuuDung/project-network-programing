@@ -12,6 +12,9 @@
 #define GAME_PLAYING 1
 #define GAME_END 0
 
+#define WIN 1
+#define LOSE 0
+
 typedef struct
 {
     float score;
@@ -36,13 +39,13 @@ typedef enum
     END_GAME,
 } GAMEPLAY_STATUS;
 
-int luckyMember(Account **head);
-float calculateScore(int countPlayerPlaying, int countPlayerLoser);
+int luckyMember(Account **head);                                    //get luckyPlayer
+float calculateScore(int countPlayerPlaying, int countPlayerLoser); //calculator score
 
-Help **createHelpList();
-void readHelpFromFile(Help **head);
-Help *newHelp(char *stt, char *key, char *value);
-void addHelp(Help **head, char *stt, char *key, char *value);
-void deleteHelp(Help **head, int stt);
-Help *searchHelpByStt(Help **head, int stt);
+Help **createHelpList();                                      //make link list null
+void readHelpFromFile(Help **head);                           // read file help.txt
+Help *newHelp(char *stt, char *key, char *value);             // create node help
+void addHelp(Help **head, char *stt, char *key, char *value); // add node help
+void deleteHelp(Help **head, int stt);                        // delete node
+Help *searchHelpByStt(Help **head, int stt);                  //search help by stt
 #endif

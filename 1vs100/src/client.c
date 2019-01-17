@@ -13,39 +13,38 @@
 
 void loginTutorial()
 {
-    printf("--------------------------------------\n");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nLogin Tutorial: ");
     printf("\n\tSignin syntax: USER username");
     printf("\n\tRegister syntax: REGISTER username password");
     printf("\n\tPassword syntax: PASS password");
-    printf("\n\tQuit syntax: QUIT \n");
-    printf("\n--------------------------------------");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nInput to syntax: \n");
 }
 
 void gamePlayForNormalTutorial()
 {
-    printf("--------------------------------------\n");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nGameplay Tutorial(Choose answer): ");
     printf("\n\tAnswer syntax: ANSWER answer");
-    printf("\n--------------------------------------");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nInput to syntax: \n");
 }
 void chooseTopicLevel()
 {
-    printf("--------------------------------------\n");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nGameplay Tutorial (Choose level): ");
-    printf("\n\tChoose Topic Level syntax: TOPIC level (level: Easy, Normal, Hard)");
-    printf("\n--------------------------------------");
+    printf("\n\tChoose Topic Level syntax: TOPIC level (level: EASY, NORMAL, HARD)");
+    printf("\n--------------------------------------------------");
     printf("\nInput to syntax: \n");
 }
 void gamePlayForSpecialTutorial()
 {
-    printf("--------------------------------------\n");
+    printf("-------------------Đấu trường 100-------------------\n");
     printf("\nGameplay Tutorial(Choose answer): ");
     printf("\n\tChoose Answer syntax: ANSWER answer");
-    printf("\n\tUse Help syntax: HELP help");
-    printf("\n--------------------------------------");
+    printf("\n\tUse Help syntax: HELP");
+    printf("\n--------------------------------------------------");
     printf("\nInput to syntax: \n");
 }
 void showQuestion(Question *question)
@@ -76,6 +75,7 @@ int main(int argc, char const *argv[])
     int questionNumber = 0;
     float score = 0;
     int inforamation = TRUE;
+    int gameStatus = GAME_PLAYING;
     if (argc != 3)
     {
         printf("\nParams incorrect\n");
@@ -109,8 +109,6 @@ int main(int argc, char const *argv[])
                     memset(buff, '\0', (strlen(buff) + 1));
                     fgets(buff, BUFF_SIZE, stdin);
                     buff[strlen(buff) - 1] = '\0';
-                    if (strcmp(buff, "QUIT") == 0)
-                        break;
                     setOpcodeRequest(request, buff);
                     sendRequest(client_sock, request, sizeof(Request), 0);
                     receiveResponse(client_sock, response, sizeof(Response), 0);
@@ -118,6 +116,7 @@ int main(int argc, char const *argv[])
                     status = response->status;
                     if (response->data != NULL)
                     {
+                        memset(username, '\0', (strlen(username) + 1));
                         strcpy(username, response->data);
                     }
                     break;
@@ -128,6 +127,7 @@ int main(int argc, char const *argv[])
                     if (status == WAITING_QUESTION)
                     {
                         readMessageResponse(response);
+                        memset(luckyPlayer, '\0', (strlen(luckyPlayer) + 1));
                         strcpy(luckyPlayer, response->data);
                         printf("Lucky player: %s\n", luckyPlayer);
 
@@ -170,6 +170,7 @@ int main(int argc, char const *argv[])
                         {
                             requestGet(client_sock);
                             receiveResponse(client_sock, response, sizeof(Response), 0);
+                            inforamation = FALSE;
                             if (response->status == END_GAME)
                             {
                                 status = response->status;
@@ -190,9 +191,12 @@ int main(int argc, char const *argv[])
                                     strcpy(topic, response->data);
                                     readMessageResponse(response);
                                 }
+                                if (status == WAITING_QUESTION)
+                                {
+                                    readMessageResponse(response);
+                                    inforamation = TRUE;
+                                }
                             }
-
-                            inforamation = FALSE;
                         }
                     }
                     else
@@ -222,18 +226,27 @@ int main(int argc, char const *argv[])
                     {
                         if (existQuestion == TRUE)
                         {
-                            printf("Câu hỏi số %d\n", questionNumber);
+                            printf("\nCâu hỏi số %d\n", questionNumber);
                             printf("Chủ đề: %s", topic);
                             showQuestion(ques);
                             printf("\nCâu trả lời: \n");
                             gamePlayForSpecialTutorial();
-                            memset(buff, '\0', (strlen(buff) + 1));
-                            fgets(buff, BUFF_SIZE, stdin);
-                            buff[strlen(buff) - 1] = '\0';
-                            setOpcodeRequest(request, buff);
-                            sendRequest(client_sock, request, sizeof(Request), 0);
+                            if (strcmp(buff, "HELP") == 0)
+                            {
+                                requestGetHelp(client_sock);
+                            }
+                            else
+                            {
+                                memset(buff, '\0', (strlen(buff) + 1));
+                                fgets(buff, BUFF_SIZE, stdin);
+                                buff[strlen(buff) - 1] = '\0';
+
+                                setOpcodeRequest(request, buff);
+                                sendRequest(client_sock, request, sizeof(Request), 0);
+                            }
                             //
                             receiveResponse(client_sock, response, sizeof(Response), 0);
+
                             status = response->status;
                             readMessageResponse(response);
                             if (status == WAITING_QUESTION)
@@ -255,11 +268,12 @@ int main(int argc, char const *argv[])
                     {
                         if (existQuestion == TRUE)
                         {
-                            printf("Câu hỏi số %d\n", questionNumber);
+                            printf("\nCâu hỏi số %d\n", questionNumber);
                             printf("Chủ đề: %s", topic);
                             showQuestion(ques);
                             printf("\nCâu trả lời: \n");
                             gamePlayForNormalTutorial();
+
                             memset(buff, '\0', (strlen(buff) + 1));
                             fgets(buff, BUFF_SIZE, stdin);
                             buff[strlen(buff) - 1] = '\0';
@@ -268,11 +282,13 @@ int main(int argc, char const *argv[])
 
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
-                            if (status != PLAYING)
+                            if (status == WAITING_QUESTION)
                             {
                                 readMessageResponse(response);
                                 existQuestion = FALSE;
                             }
+                            else if (status == PLAYING)
+                                readMessageResponse(response);
                         }
                         else
                         {
@@ -288,10 +304,13 @@ int main(int argc, char const *argv[])
                     {
                         if (inforamation == FALSE)
                         {
-                            inforamation = TRUE;
                             requestCheckInformation(client_sock);
                             receiveInformation(client_sock, infor, sizeof(Information), 0);
-                            printf("Số điểm bạn nhận được là: %1.f\n", infor->score);
+                            if (infor->status == TRUE)
+                            {
+                                printf("Số điểm bạn nhận được là: %1.f\n", infor->score);
+                                inforamation = TRUE;
+                            }
                         }
                         else
                         {
@@ -299,8 +318,7 @@ int main(int argc, char const *argv[])
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
                             readMessageResponse(response);
-                            questionNumber = 0;
-                            inforamation = FALSE;
+                            gameStatus = GAME_END;
                         }
                     }
                     else
@@ -318,13 +336,13 @@ int main(int argc, char const *argv[])
                             receiveResponse(client_sock, response, sizeof(Response), 0);
                             status = response->status;
                             readMessageResponse(response);
-                            questionNumber = 0;
-                            inforamation = TRUE;
+                            gameStatus = GAME_END;
                         }
                     }
-
                     break;
                 }
+                if (gameStatus == GAME_END)
+                    break;
             }
             //Step 5: Close socket
             close(client_sock);

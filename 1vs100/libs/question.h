@@ -12,6 +12,7 @@ typedef enum
     B,
     C,
     D,
+    E,
 } LIST_ANSWER;
 
 typedef enum
@@ -19,6 +20,7 @@ typedef enum
     EASY,
     NORMAL,
     HARD,
+    ORTHER,
 } LEVEL;
 
 typedef struct
@@ -34,18 +36,18 @@ typedef struct
     struct Question *next;
 } Question;
 
-Question **createQuestionList();
-void readQuestionFromFile(Question **head);
-Question *newQuestion(char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
-void addQuestion(Question **head, char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);
-void printListQuestion(Question **head);
-void deleteQuestion(Question **head, int stt);
+Question **createQuestionList();                                                                                                                         //Init link list null
+void readQuestionFromFile(Question **head);                                                                                                              //read file to link list
+Question *newQuestion(char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue);             // create new node
+void addQuestion(Question **head, char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue); //add node
+void printListQuestion(Question **head);                                                                                                                 // printf list question
+void deleteQuestion(Question **head, int stt);                                                                                                           //delete node question
 //search
-Question *searchQuestionByStt(Question **head, int stt);
-int searchQuestionByLevel(Question **head, LEVEL level, int *numberArray);
+Question *searchQuestionByStt(Question **head, int stt);                   //search bu stt
+int searchQuestionByLevel(Question **head, LEVEL level, int *numberArray); //search by level
 //check answer
-int checkAnswer(LIST_ANSWER node, LIST_ANSWER ans);
+int checkAnswer(LIST_ANSWER node, LIST_ANSWER ans); //check answer
 
-LIST_ANSWER convertListAnswer(char *input);
-LEVEL convertLevel(char *input);
+LIST_ANSWER convertListAnswer(char *input); // convert string to enum
+LEVEL convertLevel(char *input);            //convert string to enum
 #endif

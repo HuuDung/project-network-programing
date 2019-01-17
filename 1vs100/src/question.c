@@ -16,16 +16,20 @@ LIST_ANSWER convertListAnswer(char *input)
         return C;
     else if (strcmp(input, "D") == 0)
         return D;
+    else
+        return E;
 }
 
 LEVEL convertLevel(char *input)
 {
-    if (strcmp(input, "Easy") == 0)
+    if (strcmp(input, "EASY") == 0)
         return EASY;
-    else if (strcmp(input, "Normal") == 0)
+    else if (strcmp(input, "NORMAL") == 0)
         return NORMAL;
-    else if (strcmp(input, "Hard") == 0)
+    else if (strcmp(input, "HARD") == 0)
         return HARD;
+    else
+        return ORTHER;
 }
 Question *newQuestion(char *stt, char *level, char *question, char *answer1, char *answer2, char *answer3, char *answer4, char *answerTrue)
 {
