@@ -99,7 +99,7 @@ void setMessageResponse(Response *msg)
       strcpy(msg->message, "User used hint fail! You have used up the suggestions ");
       break;
     case TOPIC_USER_CHOOSE_LEVEL:
-      strcpy(msg->message, "User choose level ");
+      strcpy(msg->message, "");
       break;
     case TOPIC_TYPE_INVALID:
       strcpy(msg->message, "User choose level is invalid ");
@@ -122,7 +122,7 @@ void setMessageResponse(Response *msg)
     case GAME_END_WIN:
       strcpy(msg->message, "End game.\nYou are champion ");
       break;
-      case GAME_IS_PLAYING_DONT_LOG_IN:
+    case GAME_IS_PLAYING_DONT_LOG_IN:
       strcpy(msg->message, "\nGame is playing!! You can't login \n");
       break;
     default:
@@ -144,6 +144,9 @@ void readMessageResponse(Response *msg)
       break;
     case LOGOUT_SUCCESS:
       printf("Goodbye %s\n", msg->data);
+      break;
+    case TOPIC_USER_CHOOSE_LEVEL:
+      printf("User choose level %s\n", msg->data);
       break;
     default:
       break;

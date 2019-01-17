@@ -1,4 +1,5 @@
 #include "../libs/account.h"
+//Init link list
 Account **createLinkList()
 {
     Account **head = (Account **)malloc(sizeof(Account *));
@@ -6,7 +7,7 @@ Account **createLinkList()
 
     return head;
 }
-
+//find account by username
 Account *findUserNameAccount(Account **head, char *username)
 {
     Account *ptr = NULL;
@@ -17,7 +18,7 @@ Account *findUserNameAccount(Account **head, char *username)
     }
     return NULL;
 }
-
+//create node
 Account *newAccount(char *username, char *password, int accountStatus, int position)
 {
     Account *new = (Account *)malloc(sizeof(Account));
@@ -30,7 +31,7 @@ Account *newAccount(char *username, char *password, int accountStatus, int posit
     new->next = NULL;
     return new;
 }
-
+//add node
 void addAccount(Account **head, char *username, char *password, int accountStatus, int position)
 {
     Account *new = newAccount(username, password, accountStatus, position);
@@ -47,7 +48,7 @@ void addAccount(Account **head, char *username, char *password, int accountStatu
         current->next = new;
     }
 }
-
+//printf all account
 void printListAccount(Account **head)
 {
     Account *ptr = NULL;
@@ -84,7 +85,10 @@ Account *findUserNameAccountByPosition(Account **head, int position)
     }
     return NULL;
 }
-
+/*
+input: Account **head, int *numberPlayerArray
+output: number of member online and array playerNumber
+*/
 int countMemberOnline(Account **head, int *numberPlayerArray)
 {
     int members = 0;
