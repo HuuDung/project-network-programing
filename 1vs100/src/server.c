@@ -422,6 +422,8 @@ int main(int argc, char const *argv[])
                                                 score = hint->score;
                                                 playerScore -= score;
                                                 help = FALSE;
+                                                deleteHelp(headHelp, helpNumber++);
+
                                             }
                                             else
                                             {
@@ -557,7 +559,6 @@ int main(int argc, char const *argv[])
                                             response->status = gamePlayStatus[i];
                                             sendResponse(sockfd, response, sizeof(Response), 0);
                                             help = TRUE;
-                                            deleteHelp(headHelp, helpNumber++);
                                         }
                                         else
                                         {
